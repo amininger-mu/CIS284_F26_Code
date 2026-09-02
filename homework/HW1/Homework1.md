@@ -6,7 +6,7 @@
 
 ## Submission Instructions
 
-**Due Date:** September 1 at 11:59pm
+**Due Date:** September 3 at 11:59pm
 
 Complete all the work in this folder, then zip the folder and upload to Canvas.
 
