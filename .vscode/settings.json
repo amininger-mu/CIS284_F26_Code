@@ -1,0 +1,28 @@
+{
+    "java.project.sourcePaths": [
+        "lessons/L02_Java",
+        "lessons/L03_Data_Types",
+        "lessons/L04_Strings",
+        "lessons/L05_Loops",
+        "lessons/L06_Arrays",
+        "lessons/L07_Mod2",
+        "homework/HW1",
+        "homework/HW2",
+    ],
+    "java.project.outputPath": "bin",
+    "java.project.referencedLibraries": [
+        "textbook-stdlib.jar"
+    ],
+    "terminal.integrated.env.linux": {
+        "CLASSPATH": "${workspaceFolder}/textbook-stdlib.jar"
+    },
+    "terminal.integrated.env.osx": {
+        "CLASSPATH": "${workspaceFolder}/textbook-stdlib.jar"
+    },
+    "terminal.integrated.env.windows": {
+        "CLASSPATH": "${workspaceFolder}\\textbook-stdlib.jar"
+    },
+    "java.configuration.updateBuildConfiguration": "automatic",
+    "java.errors.incompleteClasspath.severity": "ignore",
+
+}
