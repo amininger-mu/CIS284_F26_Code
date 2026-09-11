@@ -6,12 +6,14 @@
         "lessons/L05_Loops",
         "lessons/L06_Arrays",
         "lessons/L07_Mod2",
+        "lessons/L08_File_IO",
         "homework/HW1",
         "homework/HW2",
     ],
     "java.project.outputPath": "bin",
     "java.project.referencedLibraries": [
-        "textbook-stdlib.jar"
+        "lib/textbook-stdlib.jar",
+        "lib/json.jar"
     ],
     "terminal.integrated.env.linux": {
         "CLASSPATH": "${workspaceFolder}/textbook-stdlib.jar"
