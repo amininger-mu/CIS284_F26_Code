@@ -21,13 +21,6 @@ public class PrimeSieve {
         // mark non-primes <= n using Sieve of Eratosthenes
         for (int factor = 2; factor*factor <= n; factor++) {
 
-            // if factor is prime, then mark multiples of factor as non-prime
-            // suffices to consider multiples factor, factor+1, ...,  n/factor
-            if (isPrime[factor]) {
-                for (int j = factor; factor*j <= n; j++) {
-                    isPrime[factor*j] = false;
-                }
-            }
         }
 
         // count primes
