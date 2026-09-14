@@ -20,14 +20,16 @@ public class PrimeSieve {
 
         // mark non-primes <= n using Sieve of Eratosthenes
         for (int factor = 2; factor*factor <= n; factor++) {
-            if(!isPrime[factor]) continue;
 
-            for (int mult = 2*factor; mult < n; mult += factor ) {
-                isPrime[mult] = false;
+			if (!isPrime[factor]) continue;
 
-            }
+			System.out.println("Found prime " + factor);
 
-
+            // if factor is prime, then mark multiples of factor as non-prime
+            // suffices to consider multiples 2*factor, 3*factor, ..., n
+			for (int mult = 2*factor; mult <= n; mult += factor) {
+				isPrime[mult] = false;
+			}
         }
 
         // count primes

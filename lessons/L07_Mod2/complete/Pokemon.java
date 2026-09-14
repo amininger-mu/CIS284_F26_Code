@@ -27,19 +27,20 @@ public class Pokemon {
 		int maxPacks = Integer.MIN_VALUE;
 
 		for (int t = 0; t < numTrials; t++) {
-			int packs = 0;  
 
-			// Simulate number of packs needed to get 102 cards
-			boolean[] hasCard = new boolean[NUM_CARDS];
-			int dictinct = 0;
+			boolean[] isCollected = new boolean[NUM_CARDS];  
 
-			while(dictinct < NUM_CARDS) {
+			int packs = 0;                           // total number of cards collected
+			int distinct = 0;                        // number of distinct cards
+
+			while (distinct < NUM_CARDS) {
 				packs++;
 				for (int c = 0; c < CARDS_PER_PACK; c++) {
 					int card = (int)(Math.random() * NUM_CARDS);
-					if (!hasCard[card]) {
-						dictinct++;
-						hasCard[card] = true;
+
+					if (!isCollected[card]) {
+						distinct++;
+						isCollected[card] = true;
 					}
 				}
 			}
