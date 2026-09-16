@@ -9,6 +9,7 @@
         "lessons/L08_File_IO",
         "homework/HW1",
         "homework/HW2",
+        "homework/HW3",
     ],
     "java.project.outputPath": "bin",
     "java.project.referencedLibraries": [
