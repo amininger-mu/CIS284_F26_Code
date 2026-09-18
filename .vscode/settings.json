@@ -7,6 +7,7 @@
         "lessons/L06_Arrays",
         "lessons/L07_Mod2",
         "lessons/L08_File_IO",
+        "lessons/L09_Drawing",
         "homework/HW1",
         "homework/HW2",
         "homework/HW3",
@@ -16,15 +17,6 @@
         "lib/textbook-stdlib.jar",
         "lib/json.jar"
     ],
-    "terminal.integrated.env.linux": {
-        "CLASSPATH": "${workspaceFolder}/textbook-stdlib.jar"
-    },
-    "terminal.integrated.env.osx": {
-        "CLASSPATH": "${workspaceFolder}/textbook-stdlib.jar"
-    },
-    "terminal.integrated.env.windows": {
-        "CLASSPATH": "${workspaceFolder}\\textbook-stdlib.jar"
-    },
     "java.configuration.updateBuildConfiguration": "automatic",
     "java.errors.incompleteClasspath.severity": "ignore",
 
