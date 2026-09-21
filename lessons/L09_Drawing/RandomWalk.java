@@ -7,6 +7,8 @@
  *
  ******************************************************************************/
 
+import java.awt.Color;
+
 public class RandomWalk {
     
     public static void main(String[] args) throws InterruptedException {
@@ -20,6 +22,12 @@ public class RandomWalk {
         int x = 0;
         int y = 0;
         int steps = 0;
+        float shade = 0.0f;
+
+        StdDraw.setCanvasSize(1000, 1000);
+        StdDraw.setXscale(-N, N);
+        StdDraw.setYscale(-N, N);
+
 
         while (true) {
             steps++;
@@ -34,6 +42,16 @@ public class RandomWalk {
             } else if (randDir == 3) {
                 y--;
             }
+
+            Color color = Color.getHSBColor(shade, 1.0f, 1.0f);
+            StdDraw.setPenColor(color);
+
+            shade += 0.02;
+            if (shade > 1.0) {
+                shade = 0.0f;
+            }
+            StdDraw.filledSquare(x, y, 0.5);
+            StdDraw.pause(100);
 
             if (Math.abs(x) == N || Math.abs(y) == N) {
                 break;

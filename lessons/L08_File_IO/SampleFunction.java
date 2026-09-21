@@ -7,7 +7,7 @@
  *
  ******************************************************************************/
 
-public class Sample {
+public class SampleFunction {
     public static void main(String[] args) {
         int n = Integer.parseInt(args[0]);    // output this many samples
 

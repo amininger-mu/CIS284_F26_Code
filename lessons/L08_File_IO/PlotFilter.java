@@ -27,7 +27,7 @@ public class PlotFilter {
 		System.out.println(y1);
 
         // for bigger points
-        StdDraw.setPenRadius(0.005);
+        StdDraw.setPenRadius(0.02);
 
         // to speed up performance, defer displaying points
         StdDraw.enableDoubleBuffering();
