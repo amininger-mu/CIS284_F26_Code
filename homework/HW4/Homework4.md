@@ -5,7 +5,7 @@
 
 ## Submission Instructions
 
-**Due Date:** Oct 29 at 11:59pm
+**Due Date:** Sep 29 at 11:59pm
 
 Zip up both java files and upload to Canvas. **Make sure each file has your name at the top**
 
