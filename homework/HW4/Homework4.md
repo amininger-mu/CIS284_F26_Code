@@ -40,7 +40,7 @@ _If you can't complete everything, it is better to submit partial work than miss
 | 5 | Part 1 | Are functions `simulateShuffles` and `drawResults` implemented correctly? |
 | 30 | Part 2 | Do your functions follow the design guidelines in Part 2? |
 | 5 | Part 2 | Does the program handle exceptions without crashing? |
-| 15 | Part 2 | Does the program implement `remove`, `sum`, and `var` correctly?|
+| 15 | Part 2 | Does the program implement `delete`, `sum`, and `var` correctly?|
 
 Note: Your output does not need to match my examples word for word. Feel free to add additional messages or personalize it, as long as it satisfies the requirements.
 
@@ -128,7 +128,7 @@ Note: If an exception is thrown when opening a file, your program _should not ex
 The Stats program must implement the commands from the previous homeworks: help, load, save, print, min, max, mean, and add.  
 
 In addition, you should implement these commands:
-1. `remove` - See Homework 2 for details
+1. `delete` - See Homework 2 for details
 2. `sum` - Prints the sum of values in the array
 3. `var` - Prints the variance of the values. (see next page)
 
