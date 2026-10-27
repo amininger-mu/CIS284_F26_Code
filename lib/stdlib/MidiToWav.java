@@ -1,3 +1,5 @@
+package stdlib;
+
 // java MidiToWav in.mid out.wav
 
 // Written by Kevin Wayne (with help from ChatGPT)

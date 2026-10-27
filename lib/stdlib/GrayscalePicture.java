@@ -1,19 +1,34 @@
+package stdlib;
+
 /******************************************************************************
- *  Compilation:  javac Picture.java
- *  Execution:    java Picture filename.jpg
+ *  Compilation:  javac GrayscalePicture.java
+ *  Execution:    java GrayscalePicture filename
  *  Dependencies: none
+ *
+ *  Data type for manipulating individual pixels of a grayscale image. The
+ *  original image can be read from a file in JPEG, GIF, or PNG format, or the
+ *  user can create a blank image of a given dimension. Includes methods for
+ *  displaying the image in a window on the screen or saving to a file.
+ *
+ *  % java GrayscalePicture mandrill.jpg
+ *
+ *  Remarks
+ *  -------
+ *   - uses BufferedImage.TYPE_INT_ARGB because BufferedImage.TYPE_BYTE_GRAY
+ *     seems to do some undesirable color correction when calling getRGB() and
+ *     setRGB()
  *
  ******************************************************************************/
 
+
 import java.awt.AlphaComposite;
 import java.awt.Color;
-import java.awt.Dimension;
+import java.awt.Dimension; 
 import java.awt.FileDialog;
-import java.awt.Graphics;
+import java.awt.Graphics;  
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
-
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -21,8 +36,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-
 import java.awt.image.BufferedImage;
+
+import javax.imageio.ImageIO;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,8 +46,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-
-import javax.imageio.ImageIO;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -43,209 +57,46 @@ import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 
 
-
 /**
- *  The {@code Picture} data type provides a basic capability for manipulating
- *  the individual pixels of an image.
- *  You can either create a blank image (of a given dimension) or read an
- *  image in a supported file format (typically JPEG, PNG, GIF, TIFF, and BMP).
- *  This class also includes methods for displaying the image in a window
- *  and saving it to a file.
- *
+ *  The <code>GrayscalePicture</code> data type provides a basic capability
+ *  for manipulating the individual pixels of a grayscale image.
+ *  The original image can be read from a {@code PNG}, {@code GIF},
+ *  or {@code JPEG} file or the user can create a blank image of a given dimension.
+ *  This class includes methods for displaying the image in a window on
+ *  the screen or saving it to a file.
  *  <p>
- *  <b>Use in the curriculum.</b>
- *  The {@code Picture} class is intended for use in the
- *  curriculum once objects are introduced.
- *  The {@link StdPicture} class is intended for earlier use in
- *  the curriculum, before objects (but it can support only one
- *  picture at a time).
- *  See {@link GrayscalePicture} for a version that supports
- *  grayscale images.
- *
- *  <p>
- *  <b>Getting started.</b>
- *  To use this class, you must have {@code Picture} in your Java classpath.
- *  Here are three possible ways to do this:
- *  <ul>
- *  <li> If you ran our autoinstaller, use the commands
- *  {@code javac-introcs} and {@code java-introcs} (or {@code javac-algs4}
- *  and {@code java-algs4}) when compiling and executing. These commands
- *  add {@code stdlib.jar} (or {@code algs4.jar}) to the Java classpath, which
- *  provides access to {@code Picture}.
- *
- *  <li> Download <a href = "https://introcs.cs.princeton.edu/java/code/stdlib.jar">stdlib.jar</a>
- *  (or <a href = "https://algs4.cs.princeton.edu/code/algs4.jar">algs4.jar</a>)
- *  and add it to the Java classpath.
- *
- *  <li> Download <a href = "https://introcs.cs.princeton.edu/java/stdlib/StdPicture.java">StdPicture.java</a>
- *  and
- *  <a href = "https://introcs.cs.princeton.edu/java/stdlib/Picture.java">Picture.java</a>
- *  and put them in the working directory.
- *  </ul>
- *
- *  <p>
- *  As a test, cut-and-paste the following short program into your editor:
- *  <pre>
- *   public class TestPicture {
- *       public static void main(String[] args) {
- *           Picture picture = new Picture("https://introcs.cs.princeton.edu/java/stdlib/mandrill.jpg");
- *           picture.show();
- *       }
- *   }
- *  </pre>
- *  <p>
- *  If you compile and execute the program, you should see a picture of a mandrill
- *  (a colorful monkey native to west-central Africa) in a window.
- *
- *  <p>
- *  <b>Anatomy of an image.</b>
- *  An image is a <em>width</em>-by-<em>height</em> grid of pixels, with pixel (0, 0)
- *  in the upper-left corner.
- *  Each pixel has a color that is represented using the <em>RGB color model</em>,
- *  which specifies the levels of <em>red</em> (R), <em>green</em> (G), and <em>blue</em> (B)
- *  on an integer scale from 0 to 255.
- *
- *  <blockquote>
- *  <img src = "https://introcs.cs.princeton.edu/java/stdlib/AnatomyImage.png" width = 200 alt = "anatomy of an image">
- *  </blockquote>
- *
- *  <p>
- *  <b>Creating pictures.</b>
- *  You can use the following constructors to create new {@code Picture} objects:
- *  <ul>
- *  <li> {@link #Picture(String filename)}
- *  <li> {@link #Picture(int width, int height)}
- *  </ul>
- *  <p>
- *  The first constructor read an image in a supported file format
- *  (typically JPEG, PNG, GIF, TIFF, and BMP)
- *  and initializes the picture to that image.
- *  The second constructor creates a <em>width</em>-by-<em>height</em> picture,
- *  with each pixel black.
- *
- *  <p>
- *  <b>Getting and setting the colors of the individual pixels.</b>
- *  You can use the following methods to get and set the color of a
- *  specified pixel:
- *  <ul>
- *  <li> {@link #get(int col, int row)}
- *  <li> {@link #set(int col, int row, Color color)}
- *  </ul>
- *  <p>
- *  The first method returns the color of pixel (<em>col</em>, <em>row</em>)
- *  as a {@code Color} object.
- *  The second method sets the color of pixel (<em>col</em>, <em>row</em>) to
- *  the specified color.
- *
- *  <p><b>Iterating over the pixels.</b>
- *  A common operation in image processing is to iterate over and process
- *  all of the pixels in an image.
- *  Here is a prototypical example that creates a grayscale version of a color image,
- *  using the NTSC formula
- *  <em>Y</em> = 0.299<em>r</em> + 0.587<em>g</em> + 0.114<em>b</em>.
- *  Note that if the red, green, and blue components of an RGB color
- *  are all equal, the color is a shade of gray.
- *  <pre>
- *  Picture picture   = new Picture("https://introcs.cs.princeton.edu/java/stdlib/mandrill.jpg");
- *  Picture grayscale = new Picture(picture.width(), picture.height());
- *  for (int col = 0; col &lt; picture.width(); col++) {
- *      for (int row = 0; row &lt; picture.height(); row++) {
- *          Color color = picture.get(col, row);
- *          int r = color.getRed();
- *          int g = color.getGreen();
- *          int b = color.getBlue();
- *          int y = (int) (Math.round(0.299*r + 0.587*g + 0.114*b));
- *          Color gray = new Color(y, y, y);
- *          grayscale.set(col, row, gray);
- *      }
- *  }
- *  picture.show();
- *  grayscale.show();
- *  </pre>
- *
- *  <p><b>Transparency.</b>
- *  Both the {@link Color} and {@code Picture} classes support
- *  transparency, using the <em>alpha channel</em>.
- *  The alpha value defines the transparency of a color, with 0 corresponding to
- *  completely transparent and 255 to completely opaque. If transparency is not
- *  explicitly used, the alpha values is 255.
- *
- *  <p><b>32-bit color.</b>
- *  Sometimes it is more convenient (or efficient) to manipulate the
- *  color of a pixel as a single 32-bit integers instead of four 8-bit components.
- *  The following methods support this:
- *  <ul>
- *  <li> {@link #getARGB(int col, int row)}
- *  <li> {@link #setARGB(int col, int row, int rgb)}
- *  </ul>
- *  <p>
- *  The alpha (A), red (R), green (G), and blue (B) components
- *  are encoded as a single 32-bit integer.
- *  Given a 32-bit {@code int} encoding the color, the following code extracts
- *  the ARGB components:
- * <blockquote><pre>
- *  int a = (rgb &gt;&gt; 24) &amp; 0xFF;
- *  int r = (rgb &gt;&gt; 16) &amp; 0xFF;
- *  int g = (rgb &gt;&gt;  8) &amp; 0xFF;
- *  int b = (rgb &gt;&gt;  0) &amp; 0xFF;
- *  </pre></blockquote>
- *  Given the ARGB components (8-bits each) of a color,
- *  the following statement packs it into a 32-bit {@code int}:
- *  <blockquote><pre>
- *  int argb = (a &lt;&lt; 24) | (r &lt;&lt; 16) | (g &lt;&lt; 8) | (b &lt;&lt; 0);
- *  </pre></blockquote>
- *
- *  <p><b>Coordinates.</b>
  *  Pixel (<em>col</em>, <em>row</em>) is column <em>col</em> and row <em>row</em>.
- *  By default, the origin (0, 0) is the pixel in the upper-left corner.
+ *  By default, the origin (0, 0) is the pixel in the top-left corner.
  *  These are common conventions in image processing and consistent with Java's
- *  {@link java.awt.image.BufferedImage} data type. The following
- *  two methods allow you to change this convention:
- *  <ul>
- *  <li> {@link #setOriginLowerLeft()}
- *  <li> {@link #setOriginUpperLeft()}
- *  </ul>
- *
- *  <p><b>Saving files.</b>
- *  The {@code Picture} class supports writing images to a supported
- *  file format (typically JPEG, PNG, GIF, TIFF, and BMP).
- *  You can save the picture to a file using these two methods:
- *  <ul>
- *  <li> {@link #save(String filename)}
- *  <li> {@link #save(File file)}
- *  </ul>
- *
- *  <p>Alternatively, you can save the picture interactively
- *  by using the menu option <em>File → Save</em> from the picture window.
- *
- *  <p><b>File formats.</b>
- *  The {@code Picture} class supports reading and writing images to any of the
- *  file formats supported by {@link javax.imageio} (typically JPEG, PNG,
- *  GIF, TIFF, and BMP).
- *  The file extensions corresponding to JPEG, PNG, GIF, TIFF, and BMP,
- *  are {@code .jpg}, {@code .png}, {@code .gif}, {@code .tif},
- *  and {@code .bmp}, respectively.
- *  The file formats JPEG and BMP do not support transparency.
- *
- *  <p><b>Memory usage.</b>
+ *  {@link java.awt.image.BufferedImage} data type.
+ *  The method {@link #setOriginLowerLeft()} change the origin to the lower left.
+ *  <p>
+ *  The {@code get()} and {@code set()} methods use {@link Color} objects to get
+ *  or set the color of the specified pixel. The {@link Color} objects are converted
+ *  to grayscale (using the NTSC formula) if the R, G, and B channels are not all equal.
+ *  The alpha channel for transparency is preserved.
+ *  The {@code getGrayscale()} and {@code setGrayscale()} methods use an
+ *  8-bit {@code int} to encode the grayscale value, thereby avoiding the need to
+ *  create temporary {@code Color} objects.
+ *  <p>
  *  A <em>W</em>-by-<em>H</em> picture uses ~ 4 <em>W H</em> bytes of memory,
- *  since the color of each pixel is encoded as a 32-bit <code>int</code>.
- *
- *  <p><b>Additional documentation.</b>
+ *  since the color of each pixel is encoded as a 32-bit <code>int</code>
+ *  <p>
  *  For additional documentation, see
  *  <a href="https://introcs.cs.princeton.edu/31datatype">Section 3.1</a> of
  *  <i>Computer Science: An Interdisciplinary Approach</i>
  *  by Robert Sedgewick and Kevin Wayne.
+ *  See {@link Picture} for a version that supports 32-bit ARGB color images.
  *
  *  @author Robert Sedgewick
  *  @author Kevin Wayne
  */
-public final class Picture implements ActionListener {
+public final class GrayscalePicture implements ActionListener {
     private final static boolean HAS_ALPHA = true;
 
     private BufferedImage image;               // the rasterized image
     private JFrame jframe;                     // on-screen view
-    private String title;                      // window title (typically the name of the file)
+    private String title;                      // name of file
     private boolean isOriginUpperLeft = true;  // location of origin
     private boolean isVisible = false;         // is the frame visible?
     private boolean isDisposed = false;        // has the window been disposed?
@@ -260,22 +111,21 @@ public final class Picture implements ActionListener {
      * @throws IllegalArgumentException if {@code width} is negative or zero
      * @throws IllegalArgumentException if {@code height} is negative or zero
      */
-    public Picture(int width, int height) {
+    public GrayscalePicture(int width, int height) {
         if (width  <= 0) throw new IllegalArgumentException("width must be positive");
         if (height <= 0) throw new IllegalArgumentException("height must be positive");
         this.width  = width;
         this.height = height;
-        this.title = width + "-by-" + height;
         image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
     }
 
    /**
-     * Creates a new picture that is a deep copy of the argument picture.
+     * Creates a new grayscale picture that is a deep copy of the argument picture.
      *
      * @param  picture the picture to copy
      * @throws IllegalArgumentException if {@code picture} is {@code null}
      */
-    public Picture(Picture picture) {
+    public GrayscalePicture(GrayscalePicture picture) {
         if (picture == null) throw new IllegalArgumentException("constructor argument is null");
 
         width  = picture.width();
@@ -289,25 +139,19 @@ public final class Picture implements ActionListener {
     }
 
    /**
-     * Creates a picture by reading a JPEG, PNG, GIF , BMP, or TIFF image
-     * from a file or URL.
-     * The filetype extension must be {@code .jpg}, {@code .png}, {@code .gif},
-     * {@code .bmp}, or {@code .tif}.
+     * Creates a grayscale picture by reading an image from a file or URL.
      *
-     * @param  filename the name of the file or URL
+     * @param  filename the name of the file (.png, .gif, or .jpg) or URL.
      * @throws IllegalArgumentException if {@code filename} is {@code null}
      * @throws IllegalArgumentException if cannot read image from file or URL
      */
-    public Picture(String filename) {
+    public GrayscalePicture(String filename) {
         if (filename == null) throw new IllegalArgumentException("constructor argument is null");
-        if (filename.length() == 0) throw new IllegalArgumentException("constructor argument is the empty string");
-
         title = filename;
         try {
             // try to read from file in working directory
             File file = new File(filename);
             if (file.isFile()) {
-                title = file.getName();
                 image = ImageIO.read(file);
             }
 
@@ -347,6 +191,15 @@ public final class Picture implements ActionListener {
                 g.dispose();
                 image = imageARGB;
             }
+
+            // convert to grayscale in-place
+            for (int col = 0; col < width; col++) {
+                for (int row = 0; row < height; row++) {
+                    Color color = new Color(image.getRGB(col, row), HAS_ALPHA);
+                    Color gray = toGray(color);
+                    image.setRGB(col, row, gray.getRGB());
+                }
+            }
         }
         catch (IOException | URISyntaxException e) {
             throw new IllegalArgumentException("could not open image: " + filename, e);
@@ -361,16 +214,16 @@ public final class Picture implements ActionListener {
      * @param file the file
      * @throws IllegalArgumentException if cannot read image
      * @throws IllegalArgumentException if {@code file} is {@code null}
-     */
-    public Picture(File file) {
+     */         
+    public GrayscalePicture(File file) {
         if (file == null) throw new IllegalArgumentException("constructor argument is null");
-
+    
         try {
             image = ImageIO.read(file);
             if (image == null) {
                 throw new IllegalArgumentException("could not read image: '" + file + "'");
             }
-
+    
             width  = image.getWidth(null);
             height = image.getHeight(null);
             title = file.getName();
@@ -384,33 +237,50 @@ public final class Picture implements ActionListener {
                 g.dispose();
                 image = imageARGB;
             }
+
+            // convert to grayscale in-place
+            for (int col = 0; col < width; col++) {
+                for (int row = 0; row < height; row++) {
+                    Color color = new Color(image.getRGB(col, row), HAS_ALPHA);
+                    Color gray = toGray(color);
+                    image.setRGB(col, row, gray.getRGB());
+                }
+            }
+            
         }
+
         catch (IOException ioe) {
             throw new IllegalArgumentException("could not open file: " + file, ioe);
         }
     }
 
+    // Returns a grayscale version of the given color as a Color object.
+    private static Color toGray(Color color) {
+        int a = color.getAlpha();
+        int r = color.getRed();
+        int g = color.getGreen();
+        int b = color.getBlue();
+        int y = (int) (Math.round(0.299*r + 0.587*g + 0.114*b));
+        return new Color(y, y, y, a);
 
-    // ----------------------------
-    // View panel + aspect-ratio lock
-    // ----------------------------
+    }
 
     private JPanel createViewPanel() {
         return new JPanel() {
-
+                
             @Override
             public Dimension getPreferredSize() {
                 // Start at image size, but clamp to ~90% of screen.
                 Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
                 int maxW = (int) (0.90 * screen.width);
                 int maxH = (int) (0.90 * screen.height);
-
+                                    
                 double aspect = (double) width / (double) height;
-
+                
                 int prefW = Math.min(width, maxW);
                 int prefH = (int) Math.round(prefW / aspect);
                 if (prefH > maxH) {
-                    prefH = Math.min(height, maxH);
+                    prefH = Math.min(height, maxH); 
                    prefW = (int) Math.round(prefH * aspect);
                 }
                 return new Dimension(Math.max(1, prefW), Math.max(1, prefH));
@@ -419,7 +289,7 @@ public final class Picture implements ActionListener {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-
+                
                 Graphics2D g2 = (Graphics2D) g.create();
                 // g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
                 //                    RenderingHints.VALUE_INTERPOLATION_BILINEAR);
@@ -427,34 +297,31 @@ public final class Picture implements ActionListener {
                                     RenderingHints.VALUE_INTERPOLATION_BICUBIC);
                 g2.setRenderingHint(RenderingHints.KEY_RENDERING,
                                     RenderingHints.VALUE_RENDER_QUALITY);
-
+             
                 int availW = getWidth();
                 int availH = getHeight();
-
+                 
                 // Uniform scale to fit, preserving aspect ratio.
                 double sx = (double) availW / width;
                 double sy = (double) availH / height;
                 double scale = Math.min(sx, sy);
-
+    
                 int drawW = (int) Math.round(width  * scale);
                 int drawH = (int) Math.round(height * scale);
-
+    
                 int x = (availW - drawW) / 2;
                 int y = (availH - drawH) / 2;
-
+        
                 // Optional: make letterbox bars black
                 // (not using for transparent images)
                 // g2.setColor(Color.BLACK);
                 // g2.fillRect(0, 0, availW, availH);
-
+        
                 g2.drawImage(image, x, y, drawW, drawH, null);
                 g2.dispose();
             }
         };
-    }
-
-
-
+    }  
 
     // create the GUI for viewing the image if needed
     // getMenuShortcutKeyMask() deprecated in Java 10 but its replacement
@@ -472,16 +339,16 @@ public final class Picture implements ActionListener {
                                  Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()));
         menu.add(menuItem1);
         frame.setJMenuBar(menuBar);
-
+                    
         frame.setContentPane(createViewPanel());
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setTitle(title);
-
+             
         // window is resizable (preserving aspect ratio)
         frame.setResizable(true);
-
+            
         frame.pack();
-
+        
         frame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -499,20 +366,32 @@ public final class Picture implements ActionListener {
         return frame;
     }
 
+   /**
+     * Returns a {@link JLabel} containing this picture, for embedding in a {@link JPanel},
+     * {@link JFrame} or other GUI widget.
+     *
+     * @return the {@code JLabel}
+     */
+    public JLabel getJLabel() {
+        if (image == null) return null;         // no image available
+        ImageIcon icon = new ImageIcon(image);
+        return new JLabel(icon);
+    }
 
    /**
-     * Sets the origin (0, 0) to be the upper left pixel. This is the default.
+     * Sets the origin to be the upper left pixel. This is the default.
      */
     public void setOriginUpperLeft() {
         isOriginUpperLeft = true;
     }
 
    /**
-     * Sets the origin (0, 0) to be the lower left pixel.
+     * Sets the origin to be the lower left pixel.
      */
     public void setOriginLowerLeft() {
         isOriginUpperLeft = false;
     }
+
 
    /**
      * Displays the picture in a window on the screen.
@@ -527,7 +406,7 @@ public final class Picture implements ActionListener {
     }
 
    /**
-     * Hides the window containing the picture.
+     * Hides the window on the screen.
      */
     public void hide() {
         if (jframe != null) {
@@ -572,44 +451,53 @@ public final class Picture implements ActionListener {
             throw new IndexOutOfBoundsException("column index must be between 0 and " + (width() - 1) + ": " + col);
     }
 
+    private void validateGrayscaleValue(int gray) {
+        if (gray < 0 || gray >= 256)
+            throw new IllegalArgumentException("grayscale value must be between 0 and 255");
+    }
+
    /**
-     * Returns the color of pixel ({@code col}, {@code row}) as a {@link java.awt.Color} object.
+     * Returns the grayscale value of pixel ({@code col}, {@code row}) as a {@link java.awt.Color}.
      *
      * @param col the column index
      * @param row the row index
-     * @return the color of pixel ({@code col}, {@code row})
+     * @return the grayscale value of pixel ({@code col}, {@code row})
      * @throws IndexOutOfBoundsException unless both {@code 0 <= col < width} and {@code 0 <= row < height}
      */
     public Color get(int col, int row) {
         validateColumnIndex(col);
         validateRowIndex(row);
-        int argb = getARGB(col, row);
-        return new Color(argb, HAS_ALPHA);
+        int argb;
+        if (isOriginUpperLeft) argb = image.getRGB(col, row);
+        else                   argb = image.getRGB(col, height - row - 1);
+        Color color = new Color(argb, HAS_ALPHA);
+        return toGray(color);
     }
 
    /**
-     * Returns the ARGB color of pixel ({@code col}, {@code row}) as a 32-bit integer.
+     * Returns the grayscale value of pixel ({@code col}, {@code row}) as an {@code int}
+     * between 0 and 255.
      * Using this method can be more efficient than {@link #get(int, int)} because
      * it does not create a {@code Color} object.
      *
      * @param col the column index
      * @param row the row index
-     * @return the 32-bit integer representation of the ARGB color of pixel ({@code col}, {@code row})
+     * @return the 8-bit integer representation of the grayscale value of pixel ({@code col}, {@code row})
      * @throws IndexOutOfBoundsException unless both {@code 0 <= col < width} and {@code 0 <= row < height}
      */
-    public int getARGB(int col, int row) {
+    public int getGrayscale(int col, int row) {
         validateColumnIndex(col);
         validateRowIndex(row);
-        if (isOriginUpperLeft) return image.getRGB(col, row);
-        else                   return image.getRGB(col, height - row - 1);
+        if (isOriginUpperLeft) return image.getRGB(col, row) & 0xFF;
+        else                   return image.getRGB(col, height - row - 1) & 0xFF;
     }
 
    /**
-     * Sets the color of pixel ({@code col}, {@code row}) to the given color.
+     * Sets the color of pixel ({@code col}, {@code row}) to the given grayscale value.
      *
      * @param col the column index
      * @param row the row index
-     * @param color the color
+     * @param color the color (converts to grayscale if color is not a shade of gray)
      * @throws IndexOutOfBoundsException unless both {@code 0 <= col < width} and {@code 0 <= row < height}
      * @throws IllegalArgumentException if {@code color} is {@code null}
      */
@@ -617,28 +505,32 @@ public final class Picture implements ActionListener {
         validateColumnIndex(col);
         validateRowIndex(row);
         if (color == null) throw new IllegalArgumentException("color argument is null");
-        int argb = color.getRGB();
-        setARGB(col, row, argb);
-    }
-
-   /**
-     * Sets the color of pixel ({@code col}, {@code row}) to the given ARGB color.
-     *
-     * @param col the column index
-     * @param row the row index
-     * @param argb the 32-bit integer representation of the color
-     * @throws IndexOutOfBoundsException unless both {@code 0 <= col < width} and {@code 0 <= row < height}
-     */
-    public void setARGB(int col, int row, int argb) {
-        validateColumnIndex(col);
-        validateRowIndex(row);
+        Color gray = toGray(color);
+        int argb = gray.getRGB();
         if (isOriginUpperLeft) image.setRGB(col, row, argb);
         else                   image.setRGB(col, height - row - 1, argb);
     }
 
    /**
-     * Returns {@code true} if this picture is equal to the argument picture,
-     * and {@code false} otherwise.
+     * Sets the color of pixel ({@code col}, {@code row}) to the given grayscale value
+     * between 0 and 255.
+     *
+     * @param col the column index
+     * @param row the row index
+     * @param gray the 8-bit integer representation of the grayscale value
+     * @throws IndexOutOfBoundsException unless both {@code 0 <= col < width} and {@code 0 <= row < height}
+     */
+    public void setGrayscale(int col, int row, int gray) {
+        validateColumnIndex(col);
+        validateRowIndex(row);
+        validateGrayscaleValue(gray);
+        int argb = (0xFF << 24) | (gray << 16) | (gray << 8) | gray;
+        if (isOriginUpperLeft) image.setRGB(col, row, argb);
+        else                   image.setRGB(col, height - row - 1, argb);
+    }
+
+   /**
+     * Returns true if this picture is equal to the argument picture.
      *
      * @param other the other picture
      * @return {@code true} if this picture is the same dimension as {@code other}
@@ -648,32 +540,32 @@ public final class Picture implements ActionListener {
         if (other == this) return true;
         if (other == null) return false;
         if (other.getClass() != this.getClass()) return false;
-        Picture that = (Picture) other;
+        GrayscalePicture that = (GrayscalePicture) other;
         if (this.width()  != that.width())  return false;
         if (this.height() != that.height()) return false;
         for (int col = 0; col < width(); col++)
             for (int row = 0; row < height(); row++)
-                if (this.getARGB(col, row) != that.getARGB(col, row)) return false;
+                if (this.getGrayscale(col, row) != that.getGrayscale(col, row)) return false;
         return true;
     }
 
    /**
      * Returns a string representation of this picture.
      * The result is a <code>width</code>-by-<code>height</code> matrix of pixels,
-     * where the color of a pixel is represented using 8 hex digits to encode
-     * the red, green, and blue components, along with alpha channel.
+     * where the grayscale value of a pixel is an integer between 0 and 255.
+     * It does not include the alpha channel.
      *
      * @return a string representation of this picture
      */
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(width +"-by-" + height + " picture (ARGB values given in hex)\n");
+        sb.append(width +"-by-" + height + " grayscale picture (grayscale values given in hex)\n");
         for (int row = 0; row < height; row++) {
             for (int col = 0; col < width; col++) {
-                int argb;
-                if (isOriginUpperLeft) argb = image.getRGB(col, row);
-                else                   argb = image.getRGB(col, height - row - 1);
-                sb.append(String.format("#%08X ", argb & 0xFFFFFFFF));
+                int gray;
+                if (isOriginUpperLeft) gray = 0xFF & image.getRGB(col, row);
+                else                   gray = 0xFF & image.getRGB(col, height - row - 1);
+                sb.append(String.format("%3d ", gray));
             }
             sb.append("\n");
         }
@@ -690,39 +582,11 @@ public final class Picture implements ActionListener {
         throw new UnsupportedOperationException("hashCode() is not supported because pictures are mutable");
     }
 
-    /**
-     * Sets the title of this picture.
-     * @param title the title
-     * @throws IllegalArgumentException if {@code title} is {@code null}
-     */
-    public void setTitle(String title) {
-        if (title == null) throw new IllegalArgumentException("title is null");
-        this.title = title;
-    }
-
-    // does this picture use transparency (i.e., alpha < 255 for some pixel)?
-    // (method not currently in used)
-    private boolean usesAlpha() {
-        for (int col = 0; col < width; col++) {
-            for (int row = 0; row < height; row++) {
-                int argb = image.getRGB(col, row);
-                int alpha =  (argb >> 24) & 0xFF;
-                if (alpha != 255) return true;
-            }
-        }
-        return false;
-    }
-
    /**
-     * Saves the picture to a file in a supported file format
-     * (typically JPEG, PNG, GIF, TIFF, and BMP).
-     * The filetype extension must be {@code .jpg}, {@code .png}, {@code .gif},
-     * {@code .bmp}, or {@code .tif}.
-     * If the file format does not support transparency (such as JPEG
-     * or BMP), it will be converted to be opaque (with purely
-     * transparent pixels converted to black).
+     * Saves the picture to a file in either PNG or JPEG format.
+     * The filetype extension must be either .png or .jpg.
      *
-     * @param filename the name of the file
+     * @param  filename the name of the file
      * @throws IllegalArgumentException if {@code filename} is {@code null}
      * @throws IllegalArgumentException if {@code filename} is the empty string
      * @throws IllegalArgumentException if {@code filename} has invalid filetype extension
@@ -730,19 +594,12 @@ public final class Picture implements ActionListener {
      */
     public void save(String filename) {
         if (filename == null) throw new IllegalArgumentException("argument to save() is null");
-        if (filename.length() == 0) throw new IllegalArgumentException("argument to save() is the empty string");
-        File file = new File(filename);
-        save(file);
+        save(new File(filename));
+        title = filename;
     }
 
    /**
-     * Saves the picture to a file in a supported file format
-     * (typically JPEG, PNG, GIF, TIFF, and BMP).
-     * The filetype extension must be {@code .jpg}, {@code .png}, {@code .gif},
-     * {@code .bmp}, or {@code .tif}.
-     * If the file format does not support transparency (such as JPEG
-     * or BMP), it will be converted to be opaque (with purely
-     * transparent pixels converted to black).
+     * Saves the picture to a file in a PNG or JPEG image format.
      *
      * @param  file the file
      * @throws IllegalArgumentException if {@code file} is {@code null}
@@ -750,10 +607,12 @@ public final class Picture implements ActionListener {
     public void save(File file) {
         if (file == null) throw new IllegalArgumentException("argument to save() is null");
         title = file.getName();
+        if (jframe != null) jframe.setTitle(title);
 
         String suffix = title.substring(title.lastIndexOf('.') + 1);
         if (!title.contains(".") || suffix.length() == 0) {
-            throw new IllegalArgumentException("The filename '" + title + "' has no filetype extension, such as .jpg or .png");
+            System.out.printf("Error: the filename '%s' has no file extension, such as .jpg or .png\n", title);
+            return;
         }
 
         try {
@@ -766,6 +625,7 @@ public final class Picture implements ActionListener {
             Graphics2D g = imageRGB.createGraphics();
             g.drawImage(image, 0, 0, Color.WHITE, null);
             g.dispose();
+
 
             if (ImageIO.write(imageRGB, suffix, file)) return;
 
@@ -795,7 +655,8 @@ public final class Picture implements ActionListener {
                 System.err.println(e.getMessage());
             }
         }
-    }
+    } 
+
 
    /**
      * Unit tests this {@code Picture} data type.
@@ -805,7 +666,7 @@ public final class Picture implements ActionListener {
      * @param args the command-line arguments
      */
     public static void main(String[] args) {
-        Picture picture = new Picture(args[0]);
+        GrayscalePicture picture = new GrayscalePicture(args[0]);
         System.out.printf("%d-by-%d\n", picture.width(), picture.height());
         picture.show();
     }

@@ -1,3 +1,5 @@
+package stdlib;
+
 import javax.sound.midi.MetaEventListener;
 import javax.sound.midi.MetaMessage;
 import javax.sound.midi.MidiChannel;

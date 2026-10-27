@@ -1,3 +1,5 @@
+package stdlib;
+
 /******************************************************************************
  *  Compilation:  javac DrawListener.java
  *  Execution:    none

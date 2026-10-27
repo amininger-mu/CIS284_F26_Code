@@ -1,3 +1,5 @@
+package stdlib;
+
 /******************************************************************************
  *  Compilation:  javac-introcs  UnicodeTest.java
  *  Execution:    java-introcs  UnicodeTest

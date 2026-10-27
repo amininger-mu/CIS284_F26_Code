@@ -1,3 +1,5 @@
+package stdlib;
+
 /******************************************************************************
  *  Compilation:  javac StdOut.java
  *  Execution:    java StdOut

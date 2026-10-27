@@ -1,3 +1,5 @@
+package stdlib;
+
 /**
  * Test client for StdIn and In.
  **/

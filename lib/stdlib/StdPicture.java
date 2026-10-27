@@ -1,3 +1,5 @@
+package stdlib;
+
 /******************************************************************************
  *  Compilation:  javac StdPicture.java
  *  Execution:    java StdPicture filename.jpg

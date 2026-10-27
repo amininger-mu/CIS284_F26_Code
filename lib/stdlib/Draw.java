@@ -1,3 +1,5 @@
+package stdlib;
+
 /******************************************************************************
  *  Compilation:  javac Draw.java
  *  Execution:    java Draw

@@ -1,3 +1,5 @@
+package stdlib;
+
 /******************************************************************************
  *  Compilation:  javac BinaryStdOut.java
  *  Execution:    java BinaryStdOut

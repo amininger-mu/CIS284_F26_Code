@@ -1,3 +1,5 @@
+package stdlib;
+
 /******************************************************************************
  *  Compilation:  javac StdRandom.java
  *  Execution:    java StdRandom

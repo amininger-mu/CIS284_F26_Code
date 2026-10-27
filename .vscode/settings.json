@@ -13,8 +13,8 @@
         "lessons/L13_Rec_Drawing",
         "lessons/L14_Libraries",
         "lessons/L15_Error_Handling",
-        "lessons/L16_Percolation",
         "lessons/L16_Breakout",
+        "lessons/L18_Image_Processing",
         "lib/",
         "homework/HW1",
         "homework/HW2",
@@ -22,7 +22,7 @@
     ],
     "java.project.outputPath": "bin",
     "java.project.referencedLibraries": [
-        "lib/textbook-stdlib.jar",
+        "lib/stdlib.jar",
         "lib/json.jar"
     ],
     "java.configuration.updateBuildConfiguration": "automatic",

@@ -1,3 +1,5 @@
+package stdlib;
+
 /******************************************************************************
  *  Compilation:  javac StdIn.java
  *  Execution:    java StdIn   (interactive test of basic functionality)

@@ -1,3 +1,5 @@
+package stdlib;
+
 import java.io.InputStream;
 import java.io.IOException;
 

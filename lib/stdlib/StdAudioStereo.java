@@ -1,3 +1,5 @@
+package stdlib;
+
 /******************************************************************************
  *  Compilation:  javac StdAudioStereo.java
  *  Execution:    java StdAudioStereo
