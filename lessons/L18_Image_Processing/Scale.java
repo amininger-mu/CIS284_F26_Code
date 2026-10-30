@@ -23,12 +23,12 @@ public class Scale {
         Picture source = new Picture(filename);
         Picture target = new Picture(width, height);
 
-        for (int targetCol = 0; targetCol < width; targetCol++) {
-            for (int targetRow = 0; targetRow < height; targetRow++) {
-                int sourceCol = targetCol * source.width()  / width;
-                int sourceRow = targetRow * source.height() / height;
-                Color color = source.get(sourceCol, sourceRow);
-                target.set(targetCol, targetRow, color);
+        for (int colT = 0; colT < width; colT++) {
+            for (int colR = 0; colR < height; colR++) {
+                int colS = colT * source.width()  / width;
+                int rowS = colR * source.height() / height;
+                Color color = source.get(colS, rowS);
+                target.set(colT, colR, color);
             }
         }
 
