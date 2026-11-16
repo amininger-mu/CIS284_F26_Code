@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 public class Complex {
     private final double real;
     private final double imag;
@@ -13,10 +15,6 @@ public class Complex {
 
     public double imag() {
         return imag;
-    }
-
-    public String toString() {
-        return real + " " + imag + "i";
     }
 
     public Complex plus(Complex z) {
@@ -35,6 +33,17 @@ public class Complex {
         return Math.sqrt(real*real + imag*imag);
     }
 
+    public String toString() {
+        return real + "+" + imag + "i";
+    }
+
+    public boolean equals(Object obj) {
+        if (obj == null) return false;
+        if (!(obj instanceof Complex)) return false;
+        Complex c2 = (Complex)obj;
+        return real == c2.real && imag == c2.imag;
+    }
+
     public static void main(String[] args) {
         double real = Double.parseDouble(args[0]);
         double imag = Double.parseDouble(args[1]);
@@ -42,7 +51,7 @@ public class Complex {
         Complex z = new Complex(0, 0);
 
         // Iterate z^2 + c
-        for (int i = 0; i < 25; i++) {
+        for (int i = 0; i < 5; i++) {
             System.out.println(i + ": " + z);
             z = z.times(z).plus(c);
         }
