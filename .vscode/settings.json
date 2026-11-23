@@ -20,6 +20,8 @@
         "lessons/L21_Creating_DTs",
         "lessons/L22_Designing_DTs",
         "lessons/L23_Generics",
+        "lessons/L24_Interfaces",
+        "lessons/L25_Drawing",
         "lib/",
         "homework/HW1",
         "homework/HW2",
